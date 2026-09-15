@@ -1,0 +1,44 @@
+version: "3"
+
+vars:
+  IMAGE: crypto-visualizer
+  PORT: "8080"
+  DEV_PORT: "5173"
+  API_PORT: "18080"
+
+tasks:
+  default:
+    desc: Build the image, then run it on {{.PORT}}
+    cmds:
+      - task: docker:build
+      - task: docker:run
+
+  dev:
+    desc: Vite HMR + Go API (http://127.0.0.1:{{.DEV_PORT}})
+    deps:
+      - web:dev
+      - api:dev
+
+  web:dev:
+    desc: Vite with HMR (proxies /api to {{.API_PORT}})
+    dir: web
+    cmds:
+      - npm run dev
+
+  api:dev:
+    desc: Go OpenSSL runner on {{.API_PORT}}
+    dir: server
+    env:
+      PORT: "{{.API_PORT}}"
+    cmds:
+      - go run .
+
+  docker:build:
+    desc: Build the multi-stage SPA + Go image
+    cmds:
+      - docker build -t {{.IMAGE}} .
+
+  docker:run:
+    desc: Run the classroom image (http://127.0.0.1:{{.PORT}})
+    cmds:
+      - docker run --rm -p {{.PORT}}:8080 {{.IMAGE}}

@@ -1,0 +1,51 @@
+{
+  "subjectHint": "www.google.com",
+  "notBefore": "Aug 10 08:39:49 2026 GMT",
+  "notAfter": "Nov  2 08:39:48 2026 GMT",
+  "fields": [
+    {
+      "name": "Version number",
+      "value": "3 (0x2)"
+    },
+    {
+      "name": "Serial number",
+      "value": "52:4b:dc:5a:3d:34:7f:58:12:40:71:9a:2f:26:21:6a"
+    },
+    {
+      "name": "Signature algorithm ID",
+      "value": "sha256WithRSAEncryption"
+    },
+    {
+      "name": "Issuer name",
+      "value": "C=US, O=Google Trust Services, CN=WR2"
+    },
+    {
+      "name": "Validity period",
+      "value": "Not Before: Aug 10 08:39:49 2026 GMT / Not After: Nov  2 08:39:48 2026 GMT"
+    },
+    {
+      "name": "Subject name",
+      "value": "CN=www.google.com"
+    },
+    {
+      "name": "Public key algorithm",
+      "value": "id-ecPublicKey"
+    },
+    {
+      "name": "Subject public key",
+      "value": "04:71:42:06:03:e5:20:9d:3d:9b:61:98:c4:92:88:25:…"
+    },
+    {
+      "name": "Other optional fields",
+      "value": "Extensions present (teach as optional — not a full extension browser)"
+    },
+    {
+      "name": "Certificate signature algorithm",
+      "value": "sha256WithRSAEncryption"
+    },
+    {
+      "name": "Certificate signature",
+      "value": "50:2f:9e:13:56:95:ac:91:c7:bc:47:17:d1:95:e1:4d:…"
+    }
+  ]
+}
