@@ -6,6 +6,7 @@ export const PART_ORDER = [
   "aes",
   "publickey",
   "trust",
+  "tlsipsec",
 ];
 
 export const PUBLICKEY_SUB_IDS = [
@@ -22,6 +23,15 @@ export const TRUST_SUB_IDS = [
   "validity",
   "hmac-lab",
   "non-repudiation",
+];
+
+export const TLSIPSEC_SUB_IDS = [
+  "layers",
+  "tls",
+  "ipsec",
+  "site-to-site",
+  "host-to-host",
+  "remote-access",
 ];
 
 
@@ -929,6 +939,362 @@ export const PARTS = [
           advancedLink: null,
         },
         realWorldNote: "Explain-only contrast; signature CLI remains on 6.5.",
+      },
+    ],
+  },
+  {
+    id: "tlsipsec",
+    title: "Part 8 — TLS and IPsec",
+    status: "current",
+    statusLabel: "Protocols",
+    disclaimer:
+      "Part 8 diagrams simplify TLS and IPsec for class. They show where each protocol sits and how traffic is protected — not a full handshake or VPN implementation.",
+    realWorldNote:
+      "Most of Part 8 is explain-only. 8.2 can generate a classroom self-signed TLS certificate. CA walkthrough and live TLS stay on 7.1 / 7.2.",
+    subsections: [
+      {
+        id: "layers",
+        label: "8.1",
+        title: "Where they operate",
+        ciaMode: "icons",
+        cia: {
+          confidentiality: {
+            rating: "good",
+            tag: "both can hide data",
+            detail: "TLS and IPsec can both encrypt — they just wrap different things.",
+          },
+          integrity: {
+            rating: "good",
+            tag: "both can detect tamper",
+            detail: "Both can authenticate and integrity-check traffic at their layer.",
+          },
+          availability: {
+            rating: "na",
+            tag: "not the lesson",
+            detail: "Availability is not the focus.",
+          },
+        },
+        teach: {
+          definition: null,
+          originalPurpose: null,
+          kerckhoffs: {
+            attribution: "Key difference",
+            quote: "TLS protects application communications, while IPsec protects IP traffic.",
+          },
+          what: [
+            "TLS sits above the transport layer. It usually wraps application data that already has a TCP path.",
+            "IPsec sits at the IP / network layer. It protects IP packets, often before an application even sees the network.",
+            "Do not flatten this to “TLS = transport layer” or “IPsec = network layer.” Each protocol attaches at a point in the stack; it is not a replacement OSI layer.",
+          ],
+          why:
+            "Same CIA goals (Confidentiality + Integrity) can be delivered at different heights. Where you apply crypto changes what is visible on the wire and who must participate.",
+          roles: null,
+          steps: [
+            "Start at the application — browsers, mail, APIs.",
+            "TLS typically protects that conversation before (or as) it is handed to TCP.",
+            "IPsec wraps or authenticates IP packets. Hosts or gateways can do this without the application knowing encryption is happening.",
+            "Both can provide Confidentiality and Integrity — at different points.",
+          ],
+          leaveWith:
+            "TLS protects application communications (usually over TCP). IPsec protects IP traffic. Same goals, different place in the stack.",
+          plaintext: null,
+          cipher: null,
+          key: null,
+          encryption: null,
+          mode: null,
+          keystream: null,
+          ciphertext: null,
+          hex: null,
+          xor: null,
+          pros: null,
+          cons: null,
+          advancedLink: null,
+        },
+        realWorldNote:
+          "Explain-only stack picture. Live certificate fetch stays on 7.2.",
+      },
+      {
+        id: "tls",
+        label: "8.2",
+        title: "TLS",
+        ciaMode: "icons",
+        cia: {
+          confidentiality: {
+            rating: "good",
+            tag: "session encryption",
+            detail: "After the handshake, symmetric keys encrypt application data (AES in 6.4 / Part 5).",
+          },
+          integrity: {
+            rating: "good",
+            tag: "auth + integrity",
+            detail: "Certificates authenticate the server (7.1). Records also carry integrity (MAC / AEAD).",
+          },
+          availability: {
+            rating: "na",
+            tag: "not the lesson",
+            detail: "Availability is not the focus.",
+          },
+        },
+        teach: {
+          definition: {
+            title: "What is TLS?",
+            body:
+              "TLS (Transport Layer Security) is a protocol that protects an application conversation — HTTPS is the familiar case — using a handshake, then fast symmetric crypto.",
+          },
+          originalPurpose: null,
+          kerckhoffs: null,
+          what:
+            "TLS solves “I am talking to the right server, and nobody in the middle can read or quietly change this session.” It is not itself TCP, even though it usually runs over TCP.",
+          why:
+            "The open internet is untrusted. TLS gives Confidentiality, Integrity, and authentication of the server (and optionally the client) for that application session.",
+          roles: "Client (browser or app) and server. A CA (7.1) vouches for the server’s public key.",
+          steps: [
+            "ClientHello — the client says hello in the clear over TCP: which TLS versions and ciphers it supports. IP addresses and port 443 stay visible.",
+            "ServerHello + Certificate — the server picks a cipher and sends a CA-signed certificate so the client knows who it is talking to (7.1).",
+            "Key exchange — public numbers go on the wire. Private keys never do (6.3).",
+            "Session keys — both sides compute the same keys locally. Those keys are not sent. A Finished message proves they match.",
+            "Encrypted application data — TLS hides HTTP. It does not hide IP addresses the way an IPsec tunnel can.",
+          ],
+          leaveWith:
+            "Handshake first (hello, certificate, key exchange), then session keys encrypt the application data. Certificates answer “whose key is this?”",
+          plaintext: null,
+          cipher: null,
+          key: "Handshake uses public-key / DH-style crypto; the session then uses symmetric keys.",
+          encryption: "Symmetric encryption after the handshake — Confidentiality of the application bytes.",
+          mode: null,
+          keystream: null,
+          ciphertext: null,
+          hex: null,
+          xor: null,
+          pros: ["Protects the application conversation without changing IP routing"],
+          cons: ["Does not hide IP addresses, ports, or that a TCP session exists"],
+          advancedLink: null,
+        },
+        realWorldNote:
+          "Locked OpenSSL templates. Generate a classroom self-signed TLS server certificate — the CA-signed walkthrough stays on 7.1; live fetch stays on 7.2.",
+      },
+      {
+        id: "ipsec",
+        label: "8.3",
+        title: "IPsec",
+        ciaMode: "icons",
+        cia: {
+          confidentiality: {
+            rating: "good",
+            tag: "ESP can encrypt",
+            detail: "Encapsulating Security Payload (ESP) can encrypt IP payload or a whole inner packet.",
+          },
+          integrity: {
+            rating: "good",
+            tag: "ESP / AH authenticate",
+            detail: "ESP and AH authenticate with an Integrity Check Value (ICV) — a fingerprint on the packet. AH authenticates but does not encrypt.",
+          },
+          availability: {
+            rating: "na",
+            tag: "not the lesson",
+            detail: "Availability is not the focus.",
+          },
+        },
+        teach: {
+          definition: {
+            title: "What is IPsec?",
+            body:
+              "IPsec is a suite of protocols that protect IP packets at the network layer — encryption, authentication, or both — between hosts or gateways.",
+          },
+          originalPurpose: null,
+          kerckhoffs: null,
+          what:
+            "IPsec solves “this IP traffic should stay confidential and unmodified even if it crosses an untrusted network,” without requiring every application to implement TLS.",
+          why:
+            "Site networks, host pairs, and remote users often need a blanket for all IP, not one TLS session per app.",
+          roles: "Peers (hosts or VPN gateways) share a Security Association (SA). Internet Key Exchange (IKE / IKEv2) is how they usually agree keys and policy.",
+          steps: [
+            "Encapsulating Security Payload (ESP) encrypts packet contents, and can also authenticate them. Most VPNs use ESP.",
+            "Authentication Header (AH) checks that a packet was not changed. It does not encrypt.",
+            "A Security Association (SA) is the agreed policy and keys for one direction of traffic.",
+            "Internet Key Exchange (IKE / IKEv2) sets up those SAs. Tunnel mode wraps the whole original packet. Transport mode encrypts the payload and leaves the original IP header in place.",
+            "In transport mode a firewall cannot look inside the packet — it only sees ESP — so it cannot inspect ports or application traffic.",
+          ],
+          leaveWith:
+            "IPsec protects IP. Encapsulating Security Payload (ESP) for encryption; AH for auth-only; Internet Key Exchange (IKE) sets up a Security Association (SA); tunnel vs transport changes what gets wrapped. Transport-mode ESP also blinds firewalls that need to look inside the packet.",
+          plaintext: null,
+          cipher: null,
+          key: "Security Association (SA) keys, usually from Internet Key Exchange version 2 (IKEv2) — not an application password.",
+          encryption: "Encapsulating Security Payload (ESP): Confidentiality of IP payload (transport) or the whole inner packet (tunnel).",
+          mode: "Tunnel mode vs transport mode — see the cards on the right, then 8.3.1–8.3.3. Transport mode is hard on firewalls: they cannot inspect encrypted payload.",
+          keystream: null,
+          ciphertext: null,
+          hex: null,
+          xor: null,
+          pros: ["Application-unaware protection of IP"],
+          cons: [
+            "Does not, by itself, authenticate a web server the way a TLS certificate does",
+            "Transport mode hides ports and payload from firewalls that need to inspect inside the packet",
+          ],
+          advancedLink: null,
+        },
+        realWorldNote: "Explain-only. No IPsec CLI in this classroom image.",
+      },
+      {
+        id: "site-to-site",
+        label: "8.3.1",
+        title: "Site-to-site VPN",
+        ciaMode: "icons",
+        cia: {
+          confidentiality: {
+            rating: "good",
+            tag: "tunnel hides inner packets",
+            detail: "Gateways encapsulate site traffic so the internet sees an IPsec tunnel, not the inner LAN packets in the clear.",
+          },
+          integrity: {
+            rating: "good",
+            tag: "tunnel authenticates",
+            detail: "The Security Association (SA) authenticates the tunnel so a forged outer packet is rejected.",
+          },
+          availability: {
+            rating: "na",
+            tag: "not the lesson",
+            detail: "Availability is not the focus.",
+          },
+        },
+        teach: {
+          definition: null,
+          originalPurpose: null,
+          kerckhoffs: null,
+          what:
+            "Two networks (sites) send traffic through VPN gateways that encrypt across an untrusted path such as the internet.",
+          why: "Branch offices need to look like one private network without trusting every hop in between.",
+          roles: "Hosts on Network A/B stay ordinary. The gateways speak IPsec.",
+          steps: [
+            "A host on Network A sends a normal inner IP packet toward Network B.",
+            "Gateway A matches a Security Association (SA) — IKE already ran — wraps the whole packet in tunnel-mode ESP, and adds outer gateway IPs.",
+            "The internet sees only gateway-to-gateway ESP. Inner addresses and payload stay encrypted.",
+            "Gateway B checks the Integrity Check Value (ICV) — a fingerprint that proves the packet was not altered — then decrypts, strips the outer header, and forwards the original packet on Network B.",
+            "That is site-to-site: whole sites sit behind the gateways. Hosts need not run IPsec.",
+          ],
+          leaveWith:
+            "Site-to-site: gateways tunnel for entire networks. Hosts on each LAN need not run IPsec themselves.",
+          plaintext: null,
+          cipher: null,
+          key: "SAs between gateways (IKE).",
+          encryption: "At the gateway — inner packet in, encrypted outer packet out.",
+          mode: "Typically tunnel mode.",
+          keystream: null,
+          ciphertext: null,
+          hex: null,
+          xor: null,
+          pros: null,
+          cons: null,
+          advancedLink: null,
+        },
+        realWorldNote: "Explain-only site-to-site picture.",
+      },
+      {
+        id: "host-to-host",
+        label: "8.3.2",
+        title: "Host-to-host IPsec",
+        ciaMode: "icons",
+        cia: {
+          confidentiality: {
+            rating: "good",
+            tag: "hosts encrypt IP",
+            detail: "Each host applies IPsec to packets it sends to the peer.",
+          },
+          integrity: {
+            rating: "good",
+            tag: "hosts authenticate IP",
+            detail: "The Security Association (SA) is between the two hosts, not a pair of site gateways.",
+          },
+          availability: {
+            rating: "na",
+            tag: "not the lesson",
+            detail: "Availability is not the focus.",
+          },
+        },
+        teach: {
+          definition: null,
+          originalPurpose: null,
+          kerckhoffs: null,
+          what:
+            "Two individual machines protect IP traffic to each other with IPsec on the hosts themselves.",
+          why: "Sometimes you need a secure path between two computers without building a site VPN.",
+          roles: "Host A and Host B are the IPsec peers.",
+          steps: [
+            "An application on Host A builds a normal packet to Host B.",
+            "Host A’s IPsec stack matches a Security Association (SA) and applies transport-mode ESP: original IP header stays; TCP and data are encrypted.",
+            "The path still sees both hosts’ real IP addresses — it cannot read the payload. Other LAN neighbors are not in this SA.",
+            "Host B checks the Integrity Check Value (ICV), decrypts, and delivers TCP/data to the application. No site gateway sat in the middle.",
+          ],
+          leaveWith:
+            "Host-to-host: the endpoints run IPsec. Site-to-site: the gateways run IPsec for whole networks.",
+          plaintext: null,
+          cipher: null,
+          key: "SAs between the two hosts.",
+          encryption: "On Host A and Host B.",
+          mode: "Often transport mode (original IP header stays), though tunnel mode is possible.",
+          keystream: null,
+          ciphertext: null,
+          hex: null,
+          xor: null,
+          pros: null,
+          cons: null,
+          advancedLink: null,
+        },
+        realWorldNote: "Explain-only host-to-host picture.",
+      },
+      {
+        id: "remote-access",
+        label: "8.3.3",
+        title: "Remote-access VPN",
+        ciaMode: "icons",
+        cia: {
+          confidentiality: {
+            rating: "good",
+            tag: "user tunnel",
+            detail: "The remote device encrypts traffic to the organization’s VPN gateway.",
+          },
+          integrity: {
+            rating: "good",
+            tag: "user + device auth",
+            detail: "The user/device is authenticated before the tunnel carries internal traffic.",
+          },
+          availability: {
+            rating: "na",
+            tag: "not the lesson",
+            detail: "Availability is not the focus.",
+          },
+        },
+        teach: {
+          definition: null,
+          originalPurpose: null,
+          kerckhoffs: null,
+          what:
+            "One user or device on an untrusted network (home, café, hotel) builds an encrypted VPN tunnel into the organization’s network.",
+          why: "Staff need internal resources without sitting on the office LAN.",
+          roles: "Remote user/device, VPN gateway, internal hosts behind the gateway.",
+          steps: [
+            "Authenticate the user/device. IKE/IKEv2 builds a Security Association (SA) with the VPN gateway — no application data yet.",
+            "The device builds an inner packet toward an internal host, often from a VPN-assigned address.",
+            "The VPN client encapsulates that packet in tunnel-mode ESP. Outer IPs are the laptop and the corporate gateway.",
+            "The untrusted path sees only laptop → gateway plus ESP.",
+            "The gateway checks the Integrity Check Value (ICV), decrypts, and forwards on the internal LAN. Unlike site-to-site, the near end is one device, not a whole remote network.",
+          ],
+          leaveWith:
+            "Remote-access: user/device ↔ gateway. Site-to-site: network ↔ network via two gateways.",
+          plaintext: null,
+          cipher: null,
+          key: "Security Association (SA) between the remote device and the gateway, after user/device authentication.",
+          encryption: "On the remote device and the VPN gateway.",
+          mode: "Typically tunnel mode toward the gateway.",
+          keystream: null,
+          ciphertext: null,
+          hex: null,
+          xor: null,
+          pros: null,
+          cons: null,
+          advancedLink: null,
+        },
+        realWorldNote: "Explain-only remote-access picture.",
       },
     ],
   },

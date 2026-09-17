@@ -14,12 +14,14 @@ import PublicKeyDemo from "./demos/PublicKeyDemo.jsx";
 import RC4Demo from "./demos/RC4Demo.jsx";
 import TripleDESDemo from "./demos/TripleDESDemo.jsx";
 import TrustAuthDemo from "./demos/TrustAuthDemo.jsx";
+import TlsIpsecDemo from "./demos/TlsIpsecDemo.jsx";
 import { runOpenSSL } from "./lib/api.js";
-import { PARTS, PUBLICKEY_SUB_IDS, TRUST_SUB_IDS, resolveLesson } from "./parts.js";
+import { PARTS, PUBLICKEY_SUB_IDS, TLSIPSEC_SUB_IDS, TRUST_SUB_IDS, resolveLesson } from "./parts.js";
 
 function subIdsFor(partId) {
   if (partId === "publickey") return PUBLICKEY_SUB_IDS;
   if (partId === "trust") return TRUST_SUB_IDS;
+  if (partId === "tlsipsec") return TLSIPSEC_SUB_IDS;
   return [];
 }
 
@@ -246,6 +248,8 @@ export default function App() {
           setPlaintext={setPlaintext}
           onRealWorldChange={onRealWorldChange}
         />
+      ) : partId === "tlsipsec" ? (
+        <TlsIpsecDemo subId={subId} onRealWorldChange={onRealWorldChange} />
       ) : (
         <p>Part not built yet.</p>
       )}
