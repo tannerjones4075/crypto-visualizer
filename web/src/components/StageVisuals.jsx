@@ -116,6 +116,68 @@ export function IconHmacLab({ className }) {
   );
 }
 
+export function IconLayers({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M6 10h20M6 16h20M6 22h20" {...stroke} />
+      <path d="M10 7v6M22 13v6" {...stroke} />
+    </svg>
+  );
+}
+
+export function IconTls({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" aria-hidden="true">
+      <rect x="7" y="14" width="18" height="12" rx="1.5" {...stroke} />
+      <path d="M11 14V11a5 5 0 0 1 10 0v3" {...stroke} />
+      <path d="M16 18v4" {...stroke} />
+    </svg>
+  );
+}
+
+export function IconIpsec({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" aria-hidden="true">
+      <rect x="4" y="11" width="10" height="10" rx="1.5" {...stroke} />
+      <rect x="18" y="11" width="10" height="10" rx="1.5" {...stroke} />
+      <path d="M14 16h4" {...stroke} />
+    </svg>
+  );
+}
+
+export function IconSiteToSite({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" aria-hidden="true">
+      <circle cx="7" cy="10" r="2.5" {...stroke} />
+      <circle cx="7" cy="22" r="2.5" {...stroke} />
+      <circle cx="25" cy="10" r="2.5" {...stroke} />
+      <circle cx="25" cy="22" r="2.5" {...stroke} />
+      <path d="M9.5 10H13l3 6 3-6h3.5M9.5 22H22.5" {...stroke} />
+    </svg>
+  );
+}
+
+export function IconHostToHost({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" aria-hidden="true">
+      <rect x="3" y="8" width="10" height="16" rx="1.5" {...stroke} />
+      <rect x="19" y="8" width="10" height="16" rx="1.5" {...stroke} />
+      <path d="M13 16h6" {...stroke} />
+    </svg>
+  );
+}
+
+export function IconRemoteAccess({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" aria-hidden="true">
+      <circle cx="8" cy="12" r="3.5" {...stroke} />
+      <path d="M4 22c1.2-3 3-4.5 4-4.5S10.8 19 12 22" {...stroke} />
+      <rect x="16" y="10" width="12" height="12" rx="1.5" {...stroke} />
+      <path d="M16 16h-3" {...stroke} />
+    </svg>
+  );
+}
+
 export function IconNonRepudiation({ className }) {
   return (
     <svg className={className} viewBox="0 0 32 32" aria-hidden="true">
@@ -139,6 +201,12 @@ const ICONS = {
   validity: IconValidity,
   "hmac-lab": IconHmacLab,
   "non-repudiation": IconNonRepudiation,
+  layers: IconLayers,
+  tls: IconTls,
+  ipsec: IconIpsec,
+  "site-to-site": IconSiteToSite,
+  "host-to-host": IconHostToHost,
+  "remote-access": IconRemoteAccess,
 };
 
 export function StageIcon({ id, className = "stage-icon" }) {
@@ -290,6 +358,126 @@ export function StageHero({ subId, signed = false, verifyOk = null, tamperOk = n
         <p className="stage-hero-caption">
           Like a wax seal on a letter — anyone can check it; only the owner can make it
         </p>
+      </div>
+    );
+  }
+
+  if (subId === "layers") {
+    return (
+      <div className="stage-hero" aria-hidden="true">
+        <div className="stage-hero-flow">
+          <div className="stage-node">
+            <span className="stage-node-label">TLS</span>
+            <ul className="stage-chips">
+              <li>above transport</li>
+            </ul>
+          </div>
+          <div className="stage-arrow">↕</div>
+          <div className="stage-node">
+            <span className="stage-node-label">IPsec</span>
+            <ul className="stage-chips">
+              <li className="picked">at IP</li>
+            </ul>
+          </div>
+        </div>
+        <p className="stage-hero-caption">Same CIA goals · different place in the stack</p>
+      </div>
+    );
+  }
+
+  if (subId === "tls") {
+    return (
+      <div className="stage-hero" aria-hidden="true">
+        <div className="stage-hero-flow stage-auth-flow">
+          <div className="stage-badge">
+            <IconTls className="stage-icon-lg" />
+            <span>Client</span>
+          </div>
+          <div className="stage-arrows-col">
+            <span>hello →</span>
+            <span>← cert</span>
+          </div>
+          <div className="stage-badge">
+            <IconTls className="stage-icon-lg" />
+            <span>Server</span>
+          </div>
+        </div>
+        <p className="stage-hero-caption">Handshake, then encrypted application data</p>
+      </div>
+    );
+  }
+
+  if (subId === "ipsec") {
+    return (
+      <div className="stage-hero" aria-hidden="true">
+        <div className="stage-hero-flow">
+          <div className="stage-node">
+            <span className="stage-node-label">ESP / AH</span>
+            <ul className="stage-chips">
+              <li>encrypt</li>
+              <li>auth</li>
+            </ul>
+          </div>
+          <div className="stage-arrow">→</div>
+          <div className="stage-node">
+            <span className="stage-node-label">SA + IKE</span>
+            <ul className="stage-chips">
+              <li className="picked">keys</li>
+            </ul>
+          </div>
+        </div>
+        <p className="stage-hero-caption">Protect IP packets · applications need not know</p>
+      </div>
+    );
+  }
+
+  if (subId === "site-to-site") {
+    return (
+      <div className="stage-hero" aria-hidden="true">
+        <div className="stage-hero-flow">
+          <div className="stage-node">
+            <span className="stage-node-label">Site A</span>
+          </div>
+          <div className="stage-arrow">════</div>
+          <div className="stage-node">
+            <span className="stage-node-label">Site B</span>
+          </div>
+        </div>
+        <p className="stage-hero-caption">Gateways tunnel for whole networks</p>
+      </div>
+    );
+  }
+
+  if (subId === "host-to-host") {
+    return (
+      <div className="stage-hero" aria-hidden="true">
+        <div className="stage-hero-flow">
+          <div className="stage-node">
+            <span className="stage-node-label">Host A</span>
+          </div>
+          <div className="stage-arrow">════</div>
+          <div className="stage-node">
+            <span className="stage-node-label">Host B</span>
+          </div>
+        </div>
+        <p className="stage-hero-caption">IPsec on the two hosts</p>
+      </div>
+    );
+  }
+
+  if (subId === "remote-access") {
+    return (
+      <div className="stage-hero" aria-hidden="true">
+        <div className="stage-hero-flow">
+          <div className="stage-node">
+            <span className="stage-node-label">User</span>
+          </div>
+          <div className="stage-arrow">════</div>
+          <div className="stage-node">
+            <span className="stage-node-label">Gateway</span>
+          </div>
+        </div>
+        <p className="stage-hero-caption">One device tunnels into the organization</p>
       </div>
     );
   }

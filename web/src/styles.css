@@ -4365,3 +4365,688 @@ button.xor-bit:hover {
 .trust-contrast .col.no {
   border-left: 3px solid color-mix(in srgb, tomato 60%, currentColor);
 }
+
+/* Part 8 — TLS and IPsec */
+.tlsip-demo {
+  display: grid;
+  gap: 1rem;
+}
+
+.tlsip-fig {
+  margin: 0.75rem 0 1rem;
+}
+
+.tlsip-fig figcaption {
+  margin: 0.65rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.tlsip-stack {
+  display: grid;
+  gap: 0.35rem;
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+.tlsip-layer {
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  text-align: center;
+}
+
+.tlsip-layer-name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+}
+
+.tlsip-layer small {
+  display: block;
+  margin-top: 0.4rem;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.8rem;
+  color: var(--ink);
+  border-left: 3px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, var(--panel));
+}
+
+.tlsip-join {
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+  padding: 0.35rem 0.5rem 0.55rem;
+}
+
+.tlsip-join-arrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.tlsip-join-note {
+  margin-top: 0.15rem;
+  padding: 0.4rem 0.65rem;
+  font-size: 0.8rem;
+  color: var(--ink);
+  text-align: center;
+  max-width: 24rem;
+  border-left: 3px solid var(--line);
+  background: color-mix(in srgb, var(--ink) 6%, var(--panel));
+}
+
+.tlsip-join-tls .tlsip-join-note {
+  border-left-color: var(--warn);
+  background: color-mix(in srgb, var(--warn) 12%, var(--panel));
+}
+
+.tlsip-join-ipsec .tlsip-join-note {
+  border-left-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--panel));
+}
+
+.tlsip-chip {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  border: 1px solid var(--line);
+}
+
+.tlsip-chip-tls {
+  border-color: var(--warn);
+  background: color-mix(in srgb, var(--warn) 12%, var(--panel));
+  color: var(--warn);
+}
+
+.tlsip-chip-ipsec {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--panel));
+  color: var(--accent);
+}
+
+.tlsip-seq {
+  overflow-x: auto;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--panel) 90%, var(--ink) 10%);
+}
+
+.tlsip-seq-heads {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-display);
+  text-align: center;
+}
+
+.tlsip-seq-row {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr 1.5rem;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.45rem 0;
+  opacity: 0.4;
+  transition: opacity 0.2s ease;
+}
+
+.tlsip-seq-row.lit {
+  opacity: 1;
+}
+
+.tlsip-seq-end {
+  text-align: center;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+.tlsip-seq-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  padding: 0.45rem 0.6rem;
+  border: 1px dashed var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+.tlsip-seq-hello .tlsip-seq-line {
+  border-style: dashed;
+}
+
+.tlsip-seq-auth .tlsip-seq-line {
+  border-style: solid;
+  border-color: var(--warn);
+  background: color-mix(in srgb, var(--warn) 10%, var(--panel));
+}
+
+.tlsip-seq-key .tlsip-seq-line {
+  border-style: solid;
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, var(--panel));
+}
+
+.tlsip-seq-keys {
+  grid-template-columns: 1fr;
+}
+
+.tlsip-seq-mid {
+  margin: 0;
+  padding: 0.4rem 0.6rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-family: var(--font-display);
+}
+
+.tlsip-seq-data {
+  grid-template-columns: 1fr;
+}
+
+.tlsip-seq-data .tlsip-seq-mid {
+  border: 3px double var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, var(--panel));
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+
+.tlsip-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+  list-style: none;
+  margin: 0.65rem 0 0;
+  padding: 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.tlsip-swatch {
+  display: inline-block;
+  width: 0.85rem;
+  height: 0.85rem;
+  margin-right: 0.35rem;
+  vertical-align: -0.1rem;
+  border: 1px solid var(--line);
+}
+
+.tlsip-swatch.hello {
+  border-style: dashed;
+  background: var(--panel);
+}
+
+.tlsip-swatch.auth {
+  border-color: var(--warn);
+  background: color-mix(in srgb, var(--warn) 25%, var(--panel));
+}
+
+.tlsip-swatch.key {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 25%, var(--panel));
+}
+
+.tlsip-swatch.data {
+  border: 3px double var(--accent);
+  background: color-mix(in srgb, var(--accent) 30%, var(--panel));
+}
+
+.tlsip-cards {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0.75rem 0;
+}
+
+@media (min-width: 800px) {
+  .tlsip-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.tlsip-card {
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.tlsip-card h4 {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+}
+
+.tlsip-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.tlsip-card-mode {
+  border-color: var(--accent);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.tlsip-s2s {
+  display: grid;
+  gap: 0.4rem;
+  max-width: 32rem;
+  margin: 0 auto 0.85rem;
+}
+
+.tlsip-s2s-hop {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--panel) 88%, var(--ink) 12%);
+  opacity: 0.45;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.tlsip-s2s-hop.lit,
+.tlsip-tunnel.lit {
+  opacity: 1;
+  border-color: var(--accent);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.tlsip-s2s-hop.gw {
+  background: var(--panel);
+}
+
+.tlsip-s2s-hop strong {
+  display: block;
+  font-family: var(--font-display);
+}
+
+.tlsip-s2s-hop small {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.tlsip-s2s-host {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.tlsip-s2s .tlsip-tunnel {
+  opacity: 0.45;
+}
+
+.tlsip-tunnel.lit {
+  opacity: 1;
+}
+
+.tlsip-s2s + .tlsip-step-copy {
+  margin-top: 0.35rem;
+}
+
+.tlsip-s2s + .tlsip-step-copy + .tlsip-wire,
+.tlsip-s2s ~ .tlsip-wire {
+  margin-top: 0.65rem;
+}
+
+.tlsip-step-copy {
+  margin: 0.35rem 0 0;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+  border-left: 4px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--panel));
+}
+
+.tlsip-step-copy-title {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  color: var(--accent);
+}
+
+.tlsip-step-copy p:last-child {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.tlsip-step-copy.hop-lana,
+.tlsip-step-copy.hop-lanb,
+.tlsip-step-copy.hop-lan,
+.tlsip-step-copy.hop-hosta,
+.tlsip-step-copy.hop-hostb,
+.tlsip-step-copy.hop-user,
+.tlsip-step-copy.hop-client {
+  border-color: color-mix(in srgb, #d36a5a 45%, var(--line));
+  border-left-color: #d36a5a;
+  background: color-mix(in srgb, #d36a5a 12%, var(--panel));
+}
+
+.tlsip-step-copy.hop-lana .tlsip-step-copy-title,
+.tlsip-step-copy.hop-lanb .tlsip-step-copy-title,
+.tlsip-step-copy.hop-lan .tlsip-step-copy-title,
+.tlsip-step-copy.hop-hosta .tlsip-step-copy-title,
+.tlsip-step-copy.hop-hostb .tlsip-step-copy-title,
+.tlsip-step-copy.hop-user .tlsip-step-copy-title,
+.tlsip-step-copy.hop-client .tlsip-step-copy-title {
+  color: #c45a4c;
+}
+
+.tlsip-step-copy.hop-gwa,
+.tlsip-step-copy.hop-gwb,
+.tlsip-step-copy.hop-wrap,
+.tlsip-step-copy.hop-server {
+  border-color: color-mix(in srgb, #c9a227 50%, var(--line));
+  border-left-color: #c9a227;
+  background: color-mix(in srgb, #c9a227 14%, var(--panel));
+}
+
+.tlsip-step-copy.hop-gwa .tlsip-step-copy-title,
+.tlsip-step-copy.hop-gwb .tlsip-step-copy-title,
+.tlsip-step-copy.hop-wrap .tlsip-step-copy-title,
+.tlsip-step-copy.hop-server .tlsip-step-copy-title {
+  color: #b8921a;
+}
+
+.tlsip-step-copy.hop-wan,
+.tlsip-step-copy.hop-data,
+.tlsip-step-copy.hop-keys {
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--line));
+  border-left-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, var(--panel));
+}
+
+.tlsip-fig .tlsip-wire + .tlsip-wire {
+  margin-top: 0.5rem;
+}
+
+.tlsip-vpn {
+  display: grid;
+  gap: 0.45rem;
+  justify-items: stretch;
+  max-width: 28rem;
+  margin: 0 auto;
+  padding: 0.75rem 0.5rem;
+}
+
+.tlsip-node {
+  padding: 0.55rem 0.75rem;
+  text-align: center;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.tlsip-node span {
+  display: block;
+  font-family: var(--font-display);
+}
+
+.tlsip-node small {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.tlsip-node-plain {
+  background: color-mix(in srgb, var(--panel) 88%, var(--ink) 12%);
+}
+
+.tlsip-v-arrow {
+  display: grid;
+  justify-items: center;
+  gap: 0.1rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.tlsip-v-arrow small {
+  font-size: 0.72rem;
+}
+
+.tlsip-tunnel {
+  margin: 0.15rem 0;
+  padding: 0.7rem 0.85rem;
+  text-align: center;
+  border: 3px double var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--panel));
+}
+
+.tlsip-tunnel-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--accent);
+}
+
+.tlsip-tunnel-sub {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.tlsip-callout {
+  margin: 0.75rem 0 0;
+  padding: 0.65rem 0.85rem;
+  border-left: 3px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 6%, var(--panel));
+  font-size: 0.95rem;
+}
+
+.tlsip-steps {
+  list-style: none;
+  margin: 0.75rem 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tlsip-steps button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+}
+
+.tlsip-step-num {
+  display: inline-grid;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 0.2rem;
+  background: var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+
+.tlsip-steps button.active .tlsip-step-num {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.tlsip-vpn-lab-title {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}
+
+.tlsip-vpn-card {
+  padding: 0.85rem 0.9rem 1rem;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.tlsip-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.tlsip-switch-track {
+  display: block;
+  width: 2.6rem;
+  height: 1.35rem;
+  border-radius: 999px;
+  background: var(--line);
+  position: relative;
+  transition: background 0.15s ease;
+}
+
+.tlsip-switch.on .tlsip-switch-track {
+  background: var(--accent);
+}
+
+.tlsip-switch-knob {
+  position: absolute;
+  top: 0.15rem;
+  left: 0.15rem;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.15s ease;
+}
+
+.tlsip-switch.on .tlsip-switch-knob {
+  transform: translateX(1.25rem);
+}
+
+.tlsip-switch-label {
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.tlsip-switch.on .tlsip-switch-label {
+  color: var(--accent);
+}
+
+.tlsip-wire {
+  padding: 0.75rem;
+  border-radius: 0.4rem;
+  background: #152028;
+  color: #d7e2e8;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.tlsip-wire p {
+  margin: 0.15rem 0;
+}
+
+.tlsip-wire code {
+  font-family: inherit;
+  color: #f4f7f8;
+}
+
+.tlsip-wire-box {
+  padding: 0.55rem 0.7rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #5d6d78;
+}
+
+.tlsip-wire-box:last-child {
+  margin-bottom: 0;
+}
+
+.tlsip-wire-h {
+  margin: 0 0 0.25rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #9bb0be;
+}
+
+.tlsip-wire-box.outer {
+  border-color: #d36a5a;
+  background: color-mix(in srgb, #d36a5a 10%, #152028);
+}
+
+.tlsip-wire-box.outer .tlsip-wire-h {
+  color: #e8a094;
+}
+
+.tlsip-wire-box.esp {
+  border-color: #3cb88a;
+  background: color-mix(in srgb, #0b6e4f 28%, #152028);
+}
+
+.tlsip-wire-box.esp .tlsip-wire-h {
+  color: #8fd6b8;
+}
+
+.tlsip-wire-sep {
+  margin: 0.45rem 0 0.4rem;
+  text-align: center;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: #8fd6b8;
+}
+
+.tlsip-wire-hidden {
+  margin: 0.35rem 0 0.5rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px dashed #5aa888;
+}
+
+.tlsip-wire-h.dim {
+  color: #8aa0ae;
+}
+
+.tlsip-wire .gib {
+  color: #c4a5e0;
+  letter-spacing: 0.02em;
+}
+
+.tlsip-wire-box.clear-ip {
+  border-color: #d36a5a;
+  background: color-mix(in srgb, #d36a5a 10%, #152028);
+}
+
+.tlsip-wire-box.clear-ip .tlsip-wire-h {
+  color: #e8a094;
+}
+
+.tlsip-wire-box.clear-tcp {
+  border-color: #7aa7c9;
+  background: color-mix(in srgb, #7aa7c9 12%, #152028);
+}
+
+.tlsip-wire-box.clear-tcp .tlsip-wire-h {
+  color: #a8cce4;
+}
+
+.tlsip-wire-box.clear-data {
+  border-color: #c9a227;
+  background: color-mix(in srgb, #c9a227 12%, #152028);
+}
+
+.tlsip-wire-box.clear-data .tlsip-wire-h {
+  color: #e6d089;
+}
+
+.tlsip-pkt-note {
+  margin: 0.75rem 0 0;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.9rem;
+  border-left: 3px solid var(--warn);
+  background: color-mix(in srgb, var(--warn) 8%, var(--panel));
+}
+
+.tlsip-pkt-note.safe {
+  border-left-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--panel));
+}
+
