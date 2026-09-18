@@ -1,14 +1,15 @@
-FROM node:22-bookworm-slim AS web
+FROM --platform=$BUILDPLATFORM node:22-bookworm-slim AS web
 WORKDIR /src/web
 COPY web/package.json web/package-lock.json ./
 RUN npm ci
 COPY web/ ./
 RUN npm run build
 
-FROM golang:1.26-bookworm AS go
+FROM --platform=$BUILDPLATFORM golang:1.26-bookworm AS go
+ARG TARGETARCH
 WORKDIR /src/server
 COPY server/ ./
-RUN CGO_ENABLED=0 go build -o /out/server .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=$TARGETARCH go build -o /out/server .
 
 FROM debian:bookworm-slim
 RUN apt-get update \

@@ -286,9 +286,88 @@ func TestTrustRevokeLeafReportsRelativeConfig(t *testing.T) {
 	}
 }
 
-// Students read argv, stdout, and stderr — none of them may expose the container's
-// temp directory.
-func TestRunsNeverExposeHostPaths(t *testing.T) {
+func TestTlsIpsecSelfSignedVariants(t *testing.T) {
+	cases := []struct {
+		variant  string
+		wantHead string
+		wantArgs []string
+		wantFile string
+	}{
+		{
+			variant:  "selfsigned-gen",
+			wantHead: "req",
+			wantArgs: []string{"-x509", "-newkey", "rsa:2048", "-noenc", "-subj", tlsServerSubject, "-keyout", "server.key"},
+		},
+		{
+			variant:  "selfsigned-show",
+			wantHead: "x509",
+			wantArgs: []string{"-noout", "-subject", "-issuer", "-dates", "-serial"},
+			wantFile: "server.crt",
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.variant, func(t *testing.T) {
+			plan, err := tlsipsecArgv(RunRequest{
+				Part:      "tlsipsec",
+				Variant:   tc.variant,
+				Plaintext: "tls-cert",
+			})
+			if plan.cleanup != nil {
+				defer plan.cleanup()
+			}
+			if err != nil {
+				t.Fatalf("tlsipsecArgv(%s) returned error: %v", tc.variant, err)
+			}
+			if len(plan.args) == 0 || plan.args[0] != tc.wantHead {
+				t.Fatalf("head = %q, want %q", plan.args, tc.wantHead)
+			}
+			got := strings.Join(plan.args, " ")
+			for _, a := range tc.wantArgs {
+				if !strings.Contains(got, a) {
+					t.Fatalf("argv %q missing %q", got, a)
+				}
+			}
+			if tc.wantFile != "" {
+				if _, err := os.Stat(filepath.Join(plan.dir, tc.wantFile)); err != nil {
+					t.Fatalf("expected file %s: %v", tc.wantFile, err)
+				}
+			}
+		})
+	}
+}
+
+func TestTlsIpsecUnknownVariantRejected(t *testing.T) {
+	if _, err := tlsipsecArgv(RunRequest{Part: "tlsipsec", Variant: "rm-rf"}); err == nil {
+		t.Fatal("unknown tlsipsec variant should be rejected")
+	}
+}
+
+func TestTlsIpsecSelfSignedGenPrintsCertificate(t *testing.T) {
+	resp := runOpenSSL(context.Background(), RunRequest{Part: "tlsipsec", Variant: "selfsigned-gen", Plaintext: "tls-cert"})
+	if !strings.Contains(resp.Stdout, "BEGIN CERTIFICATE") {
+		t.Fatalf("stdout missing certificate:\n%s\nerr=%s stderr=%s", resp.Stdout, resp.Error, resp.Stderr)
+	}
+}
+
+func TestTlsIpsecRunsNeverExposeHostPaths(t *testing.T) {
+	variants := []string{"selfsigned-gen", "selfsigned-show"}
+	tempRoots := []string{os.TempDir(), "/var/folders", "/private/var/folders", "cv-run-"}
+	for _, variant := range variants {
+		t.Run(variant, func(t *testing.T) {
+			resp := runOpenSSL(context.Background(), RunRequest{Part: "tlsipsec", Variant: variant, Plaintext: "tls-cert"})
+			text := strings.Join(resp.Argv, " ") + "\n" + resp.Stdout + "\n" + resp.Stderr + "\n" + resp.Error
+			for _, root := range tempRoots {
+				if root == "" {
+					continue
+				}
+				if strings.Contains(text, strings.TrimSuffix(root, "/")) {
+					t.Fatalf("%s output mentions host path %q:\n%s", variant, root, text)
+				}
+			}
+		})
+	}
+}
 	variants := []string{
 		"toy-ca-gen", "toy-csr-subject", "toy-ca-sign", "toy-chain-verify", "toy-leaf-fields",
 		"revoke-setup", "revoke-verify-before", "revoke-leaf", "revoke-show-crl", "revoke-verify-after",
