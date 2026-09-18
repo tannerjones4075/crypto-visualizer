@@ -2,6 +2,7 @@ version: "3"
 
 vars:
   IMAGE: crypto-visualizer
+  PLATFORMS: linux/amd64,linux/arm64
   PORT: "8080"
   DEV_PORT: "5173"
   API_PORT: "18080"
@@ -36,7 +37,7 @@ tasks:
   docker:build:
     desc: Build the multi-stage SPA + Go image
     cmds:
-      - docker build -t {{.IMAGE}} .
+      - docker buildx build --platform {{.PLATFORMS}} -t {{.IMAGE}} --load .
 
   docker:run:
     desc: Run the classroom image (http://127.0.0.1:{{.PORT}})

@@ -63,6 +63,7 @@ var allowedParts = map[string]bool{
 	"rsa":         true,
 	"sign":        true,
 	"trust":       true,
+	"tlsipsec":    true,
 }
 
 func handleRun(w http.ResponseWriter, r *http.Request) {
@@ -222,6 +223,8 @@ func buildPlan(req RunRequest) (runPlan, error) {
 		return signArgv(req)
 	case "trust":
 		return trustArgv(req)
+	case "tlsipsec":
+		return tlsipsecArgv(req)
 	default:
 		return runPlan{}, fmt.Errorf("part %q not implemented yet", req.Part)
 	}
@@ -433,6 +436,57 @@ func toyCAArgv(variant string) (runPlan, error) {
 	}
 
 	return ws.fail(fmt.Errorf("unknown toy CA variant %q", variant))
+}
+
+// Part 8.2 Real world: a classroom self-signed TLS server certificate. Same idea as
+// 7.1’s first step, but the name is a TLS server (tls.example), not a toy CA.
+const tlsServerSubject = "/CN=tls.example"
+
+func tlsipsecArgv(req RunRequest) (runPlan, error) {
+	switch req.Variant {
+	case "selfsigned-gen", "selfsigned-show":
+		return tlsSelfSignedArgv(req.Variant)
+	default:
+		return runPlan{}, fmt.Errorf("unknown tlsipsec variant %q", req.Variant)
+	}
+}
+
+func tlsSelfSignedArgv(variant string) (runPlan, error) {
+	ws, err := newWorkspace(nil)
+	if err != nil {
+		return runPlan{}, err
+	}
+
+	switch variant {
+	case "selfsigned-gen":
+		// Certificate PEM on stdout; private key stays in the workspace.
+		return ws.plan(
+			"req", "-x509",
+			"-newkey", toyKeySpec,
+			"-noenc",
+			"-keyout", "server.key",
+			"-days", toyCADays,
+			"-subj", tlsServerSubject,
+		), nil
+	case "selfsigned-show":
+		if err := ws.prep(
+			"req", "-x509",
+			"-newkey", toyKeySpec,
+			"-noenc",
+			"-keyout", "server.key",
+			"-days", toyCADays,
+			"-subj", tlsServerSubject,
+			"-out", "server.crt",
+		); err != nil {
+			return ws.fail(err)
+		}
+		return ws.plan(
+			"x509", "-in", "server.crt",
+			"-noout", "-subject", "-issuer", "-dates", "-serial",
+		), nil
+	}
+
+	return ws.fail(fmt.Errorf("unknown tlsipsec variant %q", variant))
 }
 
 // toyCAMakeCA writes ca.key + ca.crt (self-signed root).
